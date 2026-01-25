@@ -10,7 +10,7 @@
   :root {
     /* Primary colors */
     --primary: 210 89% 27%; /* #094381 */
-    --primary-lighten: 210 53% 49%; /* #3A73BD */
+    --primary-lighten: 210 70% 70%; /* 더 밝은 파란색 */
     --primary-darken: 210 100% 15%; /* #00284F */
     --primary-foreground: 0 0% 100%;
 
@@ -90,6 +90,10 @@
     border-color: hsl(var(--border));
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
@@ -97,6 +101,12 @@
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
+  }
+
+  /* 링크 스타일 리셋 - Tailwind 클래스 우선 적용 */
+  a {
+    color: unset;
+    text-decoration: none;
   }
 
   /* Fluid Typography를 위한 기본 라인 높이 */
