@@ -1,15 +1,25 @@
-import { cn } from "@/lib/utils";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import Home from "@/pages/Home";
 
+/**
+ * 메인 앱 컴포넌트
+ * - 레이아웃 구조
+ * - Navbar (고정 상단)
+ * - Home (스크롤 가능한 메인 콘텐츠)
+ * - Footer (고정 하단)
+ */
 function App() {
   return (
-    <div className="bg-background min-h-screen">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className={cn("text-foreground text-4xl font-bold")}>Brilliance</h1>
-        <p className="text-muted-foreground mt-4">
-          Tailwind의 기본 유틸리티를 활용한 깔끔한 시작
-        </p>
-        <p className="text-base">자동으로 반응형 폰트 크기 조절</p>
-      </div>
+    <div className="relative">
+      {/* 고정 Navbar */}
+      <Navbar />
+
+      {/* 메인 콘텐츠 */}
+      <Home />
+
+      {/* 고정 Footer */}
+      <Footer />
     </div>
   );
 }

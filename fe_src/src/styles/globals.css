@@ -1,8 +1,9 @@
-@import "tailwindcss";
-
-/* 폰트 로드 */
+/* 폰트 먼저 로드 (@import는 항상 맨 위) */
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap");
+
+/* Tailwind CSS */
+@import "tailwindcss";
 
 /* CSS Variables for theming */
 @layer base {
