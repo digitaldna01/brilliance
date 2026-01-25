@@ -8,6 +8,7 @@ function App() {
         <p className="text-muted-foreground mt-4">
           Tailwind의 기본 유틸리티를 활용한 깔끔한 시작
         </p>
+        <p className="text-base">자동으로 반응형 폰트 크기 조절</p>
       </div>
     </div>
   );
