@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import VideoSection from "@/components/VideoSection";
 import Footer from "../components/Footer";
 /**
@@ -8,40 +9,37 @@ import Footer from "../components/Footer";
  * - 각 섹션은 슬라이드 업 애니메이션
  */
 
-// 섹션 데이터
-const sections = [
-  {
-    id: "section1",
-    videoUrl: "/videos/Slide1.mp4",
-    title: "A Journey into the New Financial Landscape",
-    description:
-      "Brilliance introduces offshore finance to domestic clients. Discover premium financial products in regions where domestic financial regulations and tax laws do not apply.",
-  },
-  {
-    id: "section2",
-    videoUrl: "/videos/Slide2.mp4",
-    title: "Build Legacy Beyond Borders",
-    description:
-      '"Offshore" refers to activities outside one\'s home country. Offshore finance involves cross-border financial transactions, typically centered in global hubs such as Singapore, Hong Kong, Switzerland, the Cayman Islands, and Bermuda.',
-  },
-  {
-    id: "section3",
-    videoUrl: "/videos/Slide3.mp4",
-    title: "Enjoy your Borderless Retirement Life",
-    description:
-      "We connect you to offshore investment opportunities that preserve and grow your wealth across borders, free from unnecessarily tax burdens.",
-  },
-  {
-    id: "section4",
-    videoUrl: "/videos/Slide4.mp4",
-    title: "Protect the future of your family wealth",
-    description:
-      "When parents pass away, the financial product doesn't expire but is instead transferred to heirs without jurisdictions without inheritance tax. These financial products can be held long-term, allowing wealth to be preserved across generations.",
-  },
-];
-
 export default function Home() {
+  const { t } = useTranslation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // 섹션 데이터
+  const sections = [
+    {
+      id: "section1",
+      videoUrl: "/videos/Slide1.mp4",
+      title: t("home.section1.title"),
+      description: t("home.section1.description"),
+    },
+    {
+      id: "section2",
+      videoUrl: "/videos/Slide2.mp4",
+      title: t("home.section2.title"),
+      description: t("home.section2.description"),
+    },
+    {
+      id: "section3",
+      videoUrl: "/videos/Slide3.mp4",
+      title: t("home.section3.title"),
+      description: t("home.section3.description"),
+    },
+    {
+      id: "section4",
+      videoUrl: "/videos/Slide4.mp4",
+      title: t("home.section4.title"),
+      description: t("home.section4.description"),
+    },
+  ];
 
   // Intersection Observer로 현재 섹션 감지
   useEffect(() => {

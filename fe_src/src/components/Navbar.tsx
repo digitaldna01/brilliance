@@ -40,11 +40,10 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
   const currentPath = window.location.pathname;
 
   // 언어 변경 함수
-  const changeLanguage = async (langCode: string) => {
+  const changeLanguage = (langCode: string) => {
     const lang = langCode.toLowerCase();
-    await i18n.changeLanguage(lang);
-    setSelectedLanguage(langCode);
     localStorage.setItem("language", lang);
+    window.location.reload();
   };
   // 스크롤 방향 감지 및 배경 변경
   useEffect(() => {
