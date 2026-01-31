@@ -1,0 +1,44 @@
+{
+  "nav": {
+    "home": "We are Brilliance",
+    "about": "회사 소개",
+    "service": "서비스",
+    "partners": "파트너사",
+    "faq": "FAQ",
+    "contact": "문의하기",
+    "login": "로그인",
+    "logout": "로그아웃"
+  },
+  "footer": {
+    "company": "Brilliance",
+    "description": "혁신적인 솔루션을 위한 신뢰할 수 있는 파트너",
+    "koreaOffice": "한국 오피스",
+    "hongkongOffice": "홍콩 오피스",
+    "seoulLocation": "대한민국 서울",
+    "hongkongLocation": "홍콩",
+    "businessHours": "업무 시간: 9:00 - 18:00",
+    "links": "링크",
+    "privacy": "개인정보처리방침",
+    "terms": "이용약관",
+    "contactUs": "문의하기",
+    "copyright": "© {{year}} Brilliance. All rights reserved."
+  },
+  "home": {
+    "section1": {
+      "title": "We are Brilliance",
+      "description": "혁신은 여기서 시작됩니다"
+    },
+    "section2": {
+      "title": "우리의 비전",
+      "description": "미래를 선도합니다"
+    },
+    "section3": {
+      "title": "우리의 미션",
+      "description": "함께 가치를 창출합니다"
+    },
+    "section4": {
+      "title": "함께하세요",
+      "description": "혁신의 일부가 되어주세요"
+    }
+  }
+}

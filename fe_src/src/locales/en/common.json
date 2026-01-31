@@ -1,0 +1,44 @@
+{
+  "nav": {
+    "home": "We are Brilliance",
+    "about": "About Us",
+    "service": "Our Service",
+    "partners": "Our Partners",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "footer": {
+    "company": "Brilliance",
+    "description": "Your trusted partner for innovative solutions.",
+    "koreaOffice": "Korea Office",
+    "hongkongOffice": "Hong Kong Office",
+    "seoulLocation": "Seoul, South Korea",
+    "hongkongLocation": "Hong Kong",
+    "businessHours": "Business Hours: 9:00 - 18:00",
+    "links": "Links",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contactUs": "Contact Us",
+    "copyright": "© {{year}} Brilliance. All rights reserved."
+  },
+  "home": {
+    "section1": {
+      "title": "We are Brilliance",
+      "description": "Innovation starts here"
+    },
+    "section2": {
+      "title": "Our Vision",
+      "description": "Leading the future"
+    },
+    "section3": {
+      "title": "Our Mission",
+      "description": "Creating value together"
+    },
+    "section4": {
+      "title": "Join Us",
+      "description": "Be part of innovation"
+    }
+  }
+}

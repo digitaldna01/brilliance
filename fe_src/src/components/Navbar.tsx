@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Menu, Transition } from "@headlessui/react";
 import {
   Mail,
@@ -25,15 +26,26 @@ interface NavbarProps {
 }
 
 export default function Navbar({ theme = "light" }: NavbarProps) {
+  const { t, i18n } = useTranslation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // TODO: 실제 로그인 상태 연동
-  const [selectedLanguage, setSelectedLanguage] = useState("EN");
+  const [selectedLanguage, setSelectedLanguage] = useState(
+    i18n.language.toUpperCase()
+  );
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   // 현재 경로 가져오기
   const currentPath = window.location.pathname;
+
+  // 언어 변경 함수
+  const changeLanguage = async (langCode: string) => {
+    const lang = langCode.toLowerCase();
+    await i18n.changeLanguage(lang);
+    setSelectedLanguage(langCode);
+    localStorage.setItem("language", lang);
+  };
   // 스크롤 방향 감지 및 배경 변경
   useEffect(() => {
     const handleScroll = () => {
@@ -94,27 +106,27 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
   const menuItems = isLoggedIn
     ? [
         {
-          label: "We are Brilliance",
+          label: t("nav.home"),
           href: "/",
           sectionId: "home",
         },
-        { label: "About Us", href: "/about", sectionId: "about" },
-        { label: "Our Service", href: "/service", sectionId: "service" },
-        { label: "Our Partners", href: "/partners", sectionId: "partners" },
-        { label: "FAQ", href: "/faq", sectionId: "faq" },
+        { label: t("nav.about"), href: "/about", sectionId: "about" },
+        { label: t("nav.service"), href: "/service", sectionId: "service" },
+        { label: t("nav.partners"), href: "/partners", sectionId: "partners" },
+        { label: t("nav.faq"), href: "/faq", sectionId: "faq" },
       ]
     : [
         {
-          label: "We are Brilliance",
+          label: t("nav.home"),
           href: "/",
           sectionId: "home",
         },
-        { label: "Our Partners", href: "/partners", sectionId: "partners" },
+        { label: t("nav.partners"), href: "/partners", sectionId: "partners" },
       ];
 
   const languages = [
     { code: "EN", label: "English" },
-    { code: "KR", label: "한국어" },
+    { code: "KO", label: "한국어" },
   ];
 
   // Theme별 스타일 설정
@@ -205,7 +217,7 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
                       <Menu.Item key={lang.code}>
                         {({ active }) => (
                           <button
-                            onClick={() => setSelectedLanguage(lang.code)}
+                            onClick={() => changeLanguage(lang.code)}
                             className={`${active ? "bg-gray-100" : ""} ${
                               selectedLanguage === lang.code
                                 ? "text-primary font-semibold"
@@ -278,7 +290,7 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
                 <Globe size={18} className="text-secondary-2" />
                 <select
                   value={selectedLanguage}
-                  onChange={(e) => setSelectedLanguage(e.target.value)}
+                  onChange={(e) => changeLanguage(e.target.value)}
                   className="text-secondary-2 rounded border border-gray-300 px-2 py-1 text-sm"
                 >
                   {languages.map((lang) => (
