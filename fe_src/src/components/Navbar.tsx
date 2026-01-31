@@ -162,8 +162,8 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
                   key={item.href}
                   href={item.href}
                   className={`text-sm font-medium transition-all duration-500 ${
-                    isActive ? "text-primary-lighten font-semibold" : textColor
-                  } hover:text-primary-lighten`}
+                    isActive ? "text-primary-darken font-semibold" : textColor
+                  } hover:text-primary-darken`}
                 >
                   {item.label}
                 </a>
@@ -176,7 +176,7 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
             {/* Contact */}
             <a
               href="#contact"
-              className={`hover:text-primary-lighten flex items-center gap-2 text-sm font-medium transition-colors ${textColor}`}
+              className={`hover:text-primary-darken flex items-center gap-2 text-sm font-medium transition-colors ${textColor}`}
             >
               <Mail size={18} />
               <span>Contact</span>
@@ -185,7 +185,7 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
             {/* 언어 선택 드롭다운 */}
             <Menu as="div" className="relative">
               <Menu.Button
-                className={`hover:text-primary-lighten flex items-center gap-2 text-sm font-medium transition-colors ${textColor}`}
+                className={`hover:text-primary-darken flex items-center gap-2 text-sm font-medium transition-colors ${textColor}`}
               >
                 <Globe size={18} />
                 <span>{selectedLanguage}</span>
@@ -225,7 +225,7 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
             {/* 로그인/로그아웃 아이콘 */}
             <button
               onClick={() => setIsLoggedIn(!isLoggedIn)}
-              className={`hover:text-primary-lighten flex items-center gap-2 text-sm font-medium transition-colors ${textColor}`}
+              className={`hover:text-primary-darken flex items-center gap-2 text-sm font-medium transition-colors ${textColor}`}
               title={isLoggedIn ? "로그아웃" : "로그인"}
             >
               {isLoggedIn ? (
@@ -256,8 +256,10 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
                     key={item.href}
                     href={item.href}
                     className={`text-sm font-medium transition-colors ${
-                      isActive ? "text-primary font-semibold" : "text-secondary-2"
-                    } hover:text-primary`}
+                      isActive
+                        ? "text-primary font-semibold"
+                        : "text-secondary-2"
+                    } hover:text-primary-darken`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.label}
@@ -267,7 +269,7 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
               <hr className="border-gray-200" />
               <a
                 href="#contact"
-                className="text-secondary-2 hover:text-primary flex items-center gap-2 text-sm font-medium"
+                className="text-secondary-2 hover:text-primary-darken flex items-center gap-2 text-sm font-medium"
               >
                 <Mail size={18} />
                 <span>Contact</span>
@@ -288,7 +290,7 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
               </div>
               <button
                 onClick={() => setIsLoggedIn(!isLoggedIn)}
-                className="text-secondary-2 hover:text-primary flex items-center gap-2 text-sm font-medium"
+                className="text-secondary-2 hover:text-primary-darken flex items-center gap-2 text-sm font-medium"
               >
                 {isLoggedIn ? (
                   <LogOut size={18} />

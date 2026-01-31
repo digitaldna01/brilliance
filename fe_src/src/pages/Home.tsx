@@ -1,5 +1,6 @@
+import { useEffect, useRef } from "react";
 import VideoSection from "@/components/VideoSection";
-
+import Footer from "../components/Footer";
 /**
  * 랜딩 페이지 메인
  * - 4개의 풀스크린 비디오 섹션
@@ -40,17 +41,89 @@ const sections = [
 ];
 
 export default function Home() {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Intersection Observer로 현재 섹션 감지
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const observerOptions = {
+      root: container,
+      threshold: 0.5, // 50% 보이면 활성화
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // 현재 보이는 섹션 ID 전달
+          window.dispatchEvent(
+            new CustomEvent("activeSection", {
+              detail: { sectionId: entry.target.id },
+            })
+          );
+        }
+      });
+    }, observerOptions);
+
+    // 모든 섹션 관찰
+    const sections = container.querySelectorAll("section[id]");
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
+
+  // 내부 스크롤을 감지하여 커스텀 이벤트 발생
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    let scrollTimeout: number;
+
+    const handleScroll = () => {
+      // 커스텀 이벤트로 스크롤 위치 전달
+      window.dispatchEvent(
+        new CustomEvent("homeScroll", {
+          detail: { scrollY: container.scrollTop },
+        })
+      );
+
+      // 스크롤이 멈췄는지 감지 (디바운스)
+      window.clearTimeout(scrollTimeout);
+      scrollTimeout = window.setTimeout(() => {
+        // 스크롤이 멈춘 후 0.5초 뒤 Navbar 표시 이벤트
+        window.dispatchEvent(
+          new CustomEvent("sectionArrived", {
+            detail: { scrollY: container.scrollTop },
+          })
+        );
+      }, 500); // 0.5초
+    };
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+      window.clearTimeout(scrollTimeout);
+    };
+  }, []);
+
   return (
-    <main className="h-screen snap-y snap-mandatory overflow-y-scroll">
-      {sections.map((section) => (
-        <VideoSection
-          key={section.id}
-          id={section.id}
-          videoUrl={section.videoUrl}
-          title={section.title}
-          description={section.description}
-        />
-      ))}
-    </main>
+    <div
+      ref={scrollContainerRef}
+      className="fixed inset-0 h-screen w-full snap-y snap-mandatory overflow-y-scroll"
+    >
+      <main>
+        {sections.map((section) => (
+          <VideoSection
+            key={section.id}
+            id={section.id}
+            videoUrl={section.videoUrl}
+            title={section.title}
+            description={section.description}
+          />
+        ))}
+        <Footer />
+      </main>
+    </div>
   );
 }
