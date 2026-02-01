@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Menu, Transition } from "@headlessui/react";
 import {
@@ -27,6 +28,7 @@ interface NavbarProps {
 
 export default function Navbar({ theme = "light" }: NavbarProps) {
   const { t, i18n } = useTranslation();
+  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // TODO: 실제 로그인 상태 연동
@@ -34,10 +36,17 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
     i18n.language.toUpperCase()
   );
   const [showNavbar, setShowNavbar] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollYRef = useRef(0);
+  const scrollIdleTimeoutRef = useRef<number | null>(null);
 
-  // 현재 경로 가져오기
-  const currentPath = window.location.pathname;
+  // 스크롤 임계값 상수
+  const SCROLL_THRESHOLD = 100;
+  const SCROLL_BACKGROUND_THRESHOLD = 20;
+  const NAVBAR_HIDE_DELAY = 1500;
+
+  // 현재 경로
+  const currentPath = location.pathname;
+  const isHomePage = currentPath === "/";
 
   // 언어 변경 함수
   const changeLanguage = (langCode: string) => {
@@ -47,46 +56,91 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
   };
   // 스크롤 방향 감지 및 배경 변경
   useEffect(() => {
+    // 타이머 취소 헬퍼 함수
+    const clearScrollTimer = () => {
+      if (scrollIdleTimeoutRef.current) {
+        window.clearTimeout(scrollIdleTimeoutRef.current);
+        scrollIdleTimeoutRef.current = null;
+      }
+    };
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      const lastScrollY = lastScrollYRef.current;
 
-      // 스크롤 위치가 20px 이상일 때 배경 불투명
-      setIsScrolled(currentScrollY > 20);
+      if (!isHomePage) {
+        // Partners 등 Home이 아닌 페이지
+        const isScrollingUp = currentScrollY < lastScrollY;
+        const isScrollingDown = currentScrollY > lastScrollY;
+        const isNearTop = currentScrollY < SCROLL_THRESHOLD;
 
-      // 스크롤 방향 감지
-      if (currentScrollY < lastScrollY || currentScrollY < 100) {
-        // 위로 스크롤 또는 상단 근처 → Navbar 표시
-        setShowNavbar(true);
-      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // 아래로 스크롤 → Navbar 숨김
-        setShowNavbar(false);
-        setIsMobileMenuOpen(false); // 모바일 메뉴도 닫기
+        // 위로 스크롤 (상단 아님) → Navbar + 배경 표시
+        if (isScrollingUp && !isNearTop) {
+          setShowNavbar(true);
+          setIsScrolled(true);
+
+          clearScrollTimer();
+          scrollIdleTimeoutRef.current = window.setTimeout(() => {
+            setShowNavbar(false);
+            setIsScrolled(false);
+          }, NAVBAR_HIDE_DELAY);
+        }
+        // 상단 근처 → Navbar만 표시 (배경 없음)
+        else if (isNearTop) {
+          setShowNavbar(true);
+          setIsScrolled(false);
+          clearScrollTimer();
+        }
+        // 아래로 스크롤 → Navbar 즉시 숨김
+        else if (isScrollingDown && !isNearTop) {
+          setShowNavbar(false);
+          setIsScrolled(false);
+          setIsMobileMenuOpen(false);
+          clearScrollTimer();
+        }
+      } else {
+        // Home 페이지
+        setIsScrolled(currentScrollY > SCROLL_BACKGROUND_THRESHOLD);
+
+        if (currentScrollY < lastScrollY || currentScrollY < SCROLL_THRESHOLD) {
+          setShowNavbar(true);
+        } else if (
+          currentScrollY > lastScrollY &&
+          currentScrollY > SCROLL_THRESHOLD
+        ) {
+          setShowNavbar(false);
+          setIsMobileMenuOpen(false);
+        }
       }
 
-      setLastScrollY(currentScrollY);
+      lastScrollYRef.current = currentScrollY;
     };
 
     // Home 페이지의 커스텀 스크롤 이벤트 처리
     const handleHomeScroll = (e: Event) => {
       const customEvent = e as CustomEvent<{ scrollY: number }>;
       const currentScrollY = customEvent.detail.scrollY;
+      const lastScrollY = lastScrollYRef.current;
 
-      setIsScrolled(currentScrollY > 20);
+      setIsScrolled(currentScrollY > SCROLL_BACKGROUND_THRESHOLD);
 
-      if (currentScrollY < lastScrollY || currentScrollY < 100) {
+      if (currentScrollY < lastScrollY || currentScrollY < SCROLL_THRESHOLD) {
         setShowNavbar(true);
-      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      } else if (
+        currentScrollY > lastScrollY &&
+        currentScrollY > SCROLL_THRESHOLD
+      ) {
         setShowNavbar(false);
         setIsMobileMenuOpen(false);
       }
 
-      setLastScrollY(currentScrollY);
+      lastScrollYRef.current = currentScrollY;
     };
 
-    // 섹션 도착 이벤트 처리 (스크롤이 멈췄을 때)
+    // 섹션 도착 이벤트 (Home 페이지 스크롤 멈춤)
     const handleSectionArrived = () => {
       setShowNavbar(true);
-      setIsScrolled(false); // 모든 섹션 도착 시 배경 투명
+      setIsScrolled(false);
     };
 
     // 일반 window 스크롤과 커스텀 이벤트 모두 감지
@@ -98,8 +152,11 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("homeScroll", handleHomeScroll);
       window.removeEventListener("sectionArrived", handleSectionArrived);
+      if (scrollIdleTimeoutRef.current) {
+        window.clearTimeout(scrollIdleTimeoutRef.current);
+      }
     };
-  }, [lastScrollY]);
+  }, [isHomePage]);
 
   // 로그인 여부에 따른 메뉴 항목
   const menuItems = isLoggedIn
@@ -131,28 +188,56 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
   // Theme별 스타일 설정
   const themeStyles = {
     dark: {
-      scrolled: "bg-black/80 backdrop-blur-md shadow-lg",
+      scrolled: "bg-black/20 backdrop-blur-md shadow-lg",
       text: "text-white",
+      activeText: "text-primary-darken",
+      hoverText: "hover:text-primary-darken",
       style: undefined,
     },
     primary: {
       scrolled: "backdrop-blur-sm shadow-md",
       text: "text-white",
-      style: { backgroundColor: "hsl(210 89% 27% / 0.7)" }, // CSS 변수 직접 사용
+      activeText: "text-black hover:text-black font-semibold",
+      hoverText: "hover:text-gray-500",
+      style: { backgroundColor: "hsl(210 89% 27% / 0.7)" },
     },
     light: {
       scrolled: "backdrop-blur-sm shadow-md",
       text: "text-white",
+      activeText: "text-black font-semibold",
+      hoverText: "hover:text-gray-800",
       style: undefined,
     },
+  } as const;
+
+  const resolvedTheme = currentPath === "/partners" ? "dark" : theme;
+  const currentTheme = themeStyles[resolvedTheme];
+  const textColor = isScrolled ? currentTheme.text : "text-white";
+
+  // Navbar hover 핸들러
+  const handleNavbarMouseEnter = () => {
+    // hover 중일 때 타이머 취소 (숨기지 않음)
+    if (scrollIdleTimeoutRef.current) {
+      window.clearTimeout(scrollIdleTimeoutRef.current);
+      scrollIdleTimeoutRef.current = null;
+    }
   };
 
-  const currentTheme = themeStyles[theme];
-  const textColor = isScrolled ? currentTheme.text : "text-white";
+  const handleNavbarMouseLeave = () => {
+    // hover 끝나면 타이머 재시작
+    if (!isHomePage && showNavbar) {
+      scrollIdleTimeoutRef.current = window.setTimeout(() => {
+        setShowNavbar(false);
+        setIsScrolled(false);
+      }, NAVBAR_HIDE_DELAY);
+    }
+  };
 
   return (
     <nav
-      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${
+      onMouseEnter={handleNavbarMouseEnter}
+      onMouseLeave={handleNavbarMouseLeave}
+      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-500 ease-out ${
         isScrolled ? currentTheme.scrolled : "bg-transparent"
       } ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}
       style={isScrolled && currentTheme.style ? currentTheme.style : undefined}
@@ -172,9 +257,11 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
                 <a
                   key={item.href}
                   href={item.href}
-                  className={`text-sm font-medium transition-all duration-500 ${
-                    isActive ? "text-primary-darken font-semibold" : textColor
-                  } hover:text-primary-darken`}
+                  className={`text-sm font-medium transition-colors ${
+                    isActive
+                      ? `${currentTheme.activeText} font-semibold`
+                      : textColor
+                  } ${currentTheme.hoverText}`}
                 >
                   {item.label}
                 </a>
@@ -187,7 +274,7 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
             {/* Contact */}
             <a
               href="#contact"
-              className={`hover:text-primary-darken flex items-center gap-2 text-sm font-medium transition-colors ${textColor}`}
+              className={`flex items-center gap-2 text-sm font-medium transition-colors ${textColor} ${currentTheme.hoverText}`}
             >
               <Mail size={18} />
               <span>Contact</span>

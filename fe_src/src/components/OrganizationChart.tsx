@@ -74,14 +74,14 @@ export default function OrganizationChart() {
         </div>
 
         {/* 프로필 카드 그리드 */}
-        <div className="mx-auto flex flex-wrap justify-center gap-8 sm:max-w-xl md:max-w-9/12 lg:max-w-7/12 lg:gap-12">
+        <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-x-6 gap-y-6">
           {teamMembers.map((member) => (
             <div
               key={member.id}
-              className="flex flex-col items-start rounded-lg border-1 border-gray-200 bg-white p-4 shadow-md transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-lg"
+              className="flex w-40 flex-col items-start rounded-lg border border-gray-200 bg-white p-2 shadow-md transition-all duration-200 ease-out hover:scale-[1.03] hover:shadow-lg sm:w-44 sm:p-2 lg:w-48 lg:p-4"
             >
               {/* 프로필 이미지 */}
-              <div className="mb-2 h-32 w-32 overflow-hidden rounded-lg bg-gray-200">
+              <div className="mx-auto mb-2 h-20 w-20 overflow-hidden rounded-lg bg-gray-200 sm:h-24 sm:w-24 lg:h-32 lg:w-32">
                 <img
                   src={member.image}
                   alt={member.name}
@@ -90,9 +90,15 @@ export default function OrganizationChart() {
               </div>
 
               {/* 정보 */}
-              <h3 className="text-base font-semibold">{member.name}</h3>
-              <p className="mb-2 text-xs text-gray-600">{member.title}</p>
-              <p className="text-base font-medium">{member.role}</p>
+              <h3 className="text-sm font-semibold sm:text-base lg:text-lg">
+                {member.name}
+              </h3>
+              <p className="mb-2 text-[10px] text-gray-600 sm:text-xs lg:text-sm">
+                {member.title}
+              </p>
+              <p className="text-sm font-medium sm:text-base lg:text-lg">
+                {member.role}
+              </p>
             </div>
           ))}
         </div>
