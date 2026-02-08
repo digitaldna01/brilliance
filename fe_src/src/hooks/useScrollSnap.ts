@@ -12,8 +12,8 @@ interface UseScrollSnapOptions {
 }
 
 export function useScrollSnap({ totalSections }: UseScrollSnapOptions) {
-  const [currentSection, setCurrentSection] = useState(0);
-  const [scrollDirection, setScrollDirection] = useState<"up" | "down">("down");
+  const [currentSection] = useState(0);
+  const [scrollDirection] = useState<"up" | "down">("down");
 
   useEffect(() => {
     // TODO: Intersection Observer 설정

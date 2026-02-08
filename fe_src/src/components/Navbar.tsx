@@ -32,9 +32,7 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // TODO: 실제 로그인 상태 연동
-  const [selectedLanguage, setSelectedLanguage] = useState(
-    i18n.language.toUpperCase()
-  );
+  const [selectedLanguage] = useState(i18n.language.toUpperCase());
   const [showNavbar, setShowNavbar] = useState(true);
   const lastScrollYRef = useRef(0);
   const scrollIdleTimeoutRef = useRef<number | null>(null);
@@ -324,7 +322,7 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
             <button
               onClick={() => setIsLoggedIn(!isLoggedIn)}
               className={`hover:text-primary-darken flex items-center gap-2 text-sm font-medium transition-colors ${textColor}`}
-              title={isLoggedIn ? "로그아웃" : "로그인"}
+              title={isLoggedIn ? t("nav.logout") : t("nav.login")}
             >
               {isLoggedIn ? (
                 <LogOut size={24} />
@@ -344,40 +342,61 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
         </div>
 
         {/* 모바일 메뉴 */}
-        {isMobileMenuOpen && (
-          <div className="border-t border-gray-200 bg-white py-4 md:hidden">
-            <div className="flex flex-col gap-4">
-              {menuItems.map((item) => {
-                const isActive = currentPath === item.href;
-                return (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className={`text-sm font-medium transition-colors ${
-                      isActive
-                        ? "text-primary font-semibold"
-                        : "text-secondary-2"
-                    } hover:text-primary-darken`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {item.label}
-                  </a>
-                );
-              })}
-              <hr className="border-gray-200" />
+        <div
+          className={`overflow-hidden transition-all duration-300 ease-out md:hidden ${
+            isMobileMenuOpen
+              ? "max-h-[700px] translate-y-0 opacity-100"
+              : "pointer-events-none max-h-0 -translate-y-2 opacity-0"
+          }`}
+          aria-hidden={!isMobileMenuOpen}
+        >
+          <div
+            className={`mt-3 overflow-hidden rounded-2xl border border-gray-200/70 bg-white/95 shadow-lg backdrop-blur-md transition-all duration-300 ease-out ${
+              isMobileMenuOpen ? "scale-100" : "scale-95"
+            }`}
+          >
+            <div className="px-4 pt-4 pb-3">
+              <p className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                Pages
+              </p>
+              <div className="mt-3 flex flex-col gap-2">
+                {menuItems.map((item) => {
+                  const isActive = currentPath === item.href;
+                  return (
+                    <a
+                      key={item.href}
+                      href={item.href}
+                      className={`rounded-lg px-3 py-2 text-[15px] font-medium transition-colors ${
+                        isActive
+                          ? "bg-primary/10 text-primary font-semibold"
+                          : "text-secondary-2"
+                      } hover:text-primary-darken hover:bg-gray-50`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {item.label}
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="border-t border-gray-200/70 px-4 py-4">
+              <p className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                Quick
+              </p>
               <a
                 href="#contact"
-                className="text-secondary-2 hover:text-primary-darken flex items-center gap-2 text-sm font-medium"
+                className="text-secondary-2 hover:text-primary-darken mt-3 flex items-center gap-2 rounded-lg px-3 py-2 text-[15px] font-medium transition-colors hover:bg-gray-50"
               >
                 <Mail size={18} />
                 <span>Contact</span>
               </a>
-              <div className="flex items-center gap-2">
+              <div className="mt-3 flex items-center gap-3 rounded-lg border border-gray-200/70 bg-white px-3 py-2">
                 <Globe size={18} className="text-secondary-2" />
                 <select
                   value={selectedLanguage}
                   onChange={(e) => changeLanguage(e.target.value)}
-                  className="text-secondary-2 rounded border border-gray-300 px-2 py-1 text-sm"
+                  className="text-secondary-2 w-full bg-transparent text-[15px] focus:outline-none"
                 >
                   {languages.map((lang) => (
                     <option key={lang.code} value={lang.code}>
@@ -386,20 +405,26 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
                   ))}
                 </select>
               </div>
+            </div>
+
+            <div className="border-t border-gray-200/70 px-4 py-4">
+              <p className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                Account
+              </p>
               <button
                 onClick={() => setIsLoggedIn(!isLoggedIn)}
-                className="text-secondary-2 hover:text-primary-darken flex items-center gap-2 text-sm font-medium"
+                className="text-secondary-2 hover:text-primary-darken mt-3 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[15px] font-medium transition-colors hover:bg-gray-50"
               >
                 {isLoggedIn ? (
                   <LogOut size={18} />
                 ) : (
                   <CircleUserRound size={18} />
                 )}
-                <span>{isLoggedIn ? "로그아웃" : "로그인"}</span>
+                <span>{isLoggedIn ? t("nav.logout") : t("nav.login")}</span>
               </button>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </nav>
   );
