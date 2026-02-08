@@ -1,6 +1,7 @@
 import FinancialTourSection from "@/components/service/FinancialTourSection";
 import ProductEnrollmentSection from "@/components/service/ProductEnrollmentSection";
 import ServiceHero from "@/components/service/ServiceHero";
+import AccountSupport from "@/components/service/AccountSupport";
 
 export default function Service() {
   return (
@@ -8,6 +9,7 @@ export default function Service() {
       <ServiceHero />
       <ProductEnrollmentSection />
       <FinancialTourSection />
+      <AccountSupport />
     </main>
   );
 }
