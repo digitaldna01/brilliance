@@ -64,3 +64,47 @@
     line-height: 1.6;
   }
 }
+
+@keyframes itinerary-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-1 * var(--scroll-distance, 0px)));
+  }
+}
+
+@keyframes itinerary-scroll-right {
+  0% {
+    transform: translateX(calc(-1 * var(--scroll-distance, 0px)));
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.itinerary-marquee {
+  width: max-content;
+  animation: itinerary-scroll 38s linear infinite;
+}
+
+.itinerary-marquee-right {
+  width: max-content;
+  animation: itinerary-scroll-right 38s linear infinite;
+}
+
+@keyframes typewriter-caret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.typewriter-caret {
+  display: inline-block;
+  margin-left: 2px;
+  animation: typewriter-caret 1.4s step-end infinite;
+}
