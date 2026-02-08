@@ -244,13 +244,13 @@ export default function Service() {
             <img
               src="/images/services-hero.jpg"
               alt="Brilliance services hero"
-              className="h-[260px] w-full object-cover sm:h-[360px] lg:h-[420px]"
+              className="h-65 w-full object-cover sm:h-90 lg:h-105"
             />
           </div>
 
           <div
             ref={cardReveal.ref}
-            className={`mx-auto mt-4 w-full max-w-4xl rounded-xl border border-gray-200 bg-white shadow-md transition-all duration-1000 ease-out lg:absolute lg:bottom-[-28px] lg:left-1/2 lg:mt-0 lg:-translate-x-1/2 ${
+            className={`mx-auto mt-4 w-full max-w-4xl rounded-xl border border-gray-200 bg-white shadow-md transition-all duration-1000 ease-out lg:absolute lg:-bottom-7 lg:left-1/2 lg:mt-0 lg:-translate-x-1/2 ${
               cardReveal.isVisible
                 ? "translate-y-0 opacity-100"
                 : "translate-y-37.5 opacity-0"
@@ -260,7 +260,7 @@ export default function Service() {
               {serviceHighlights.map((item, index) => (
                 <div
                   key={item}
-                  className={`text-secondary-2 flex items-center gap-2 text-sm font-medium transition-all duration-[600ms] ease-out last:border-r-0 sm:justify-center sm:border-r sm:border-gray-200 ${
+                  className={`text-secondary-2 flex items-center gap-2 text-sm font-medium transition-all duration-600 ease-out last:border-r-0 sm:justify-center sm:border-r sm:border-gray-200 ${
                     cardReveal.isVisible
                       ? "translate-x-0 opacity-100"
                       : "translate-x-25 opacity-0"
@@ -367,7 +367,7 @@ export default function Service() {
                 return (
                   <div
                     key={`${card.key}-${card.dayIndex}`}
-                    className="w-[260px] shrink-0 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm"
+                    className="w-65 shrink-0 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm"
                   >
                     <div>
                       {card.chunkIndex === 0 ? (
@@ -490,7 +490,7 @@ function EnrollmentCard({ step, index }: EnrollmentCardProps) {
         className="mx-auto h-24 w-24 rounded-2xl object-contain sm:h-28 sm:w-28 lg:h-32 lg:w-32"
         loading="lazy"
       />
-      <div className="mx-auto max-w-[240px] space-y-2 text-left">
+      <div className="mx-auto max-w-60 space-y-2 text-left">
         <h3 className="text-secondary-2 text-sm font-semibold">
           {index + 1}. {step.title}
         </h3>

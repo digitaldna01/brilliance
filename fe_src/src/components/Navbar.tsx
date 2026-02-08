@@ -382,7 +382,7 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
         <div
           className={`overflow-hidden transition-all duration-300 ease-out md:hidden ${
             isMobileMenuOpen
-              ? "max-h-[700px] translate-y-0 opacity-100"
+              ? "max-h-175 translate-y-0 opacity-100"
               : "pointer-events-none max-h-0 -translate-y-2 opacity-0"
           }`}
           aria-hidden={!isMobileMenuOpen}
