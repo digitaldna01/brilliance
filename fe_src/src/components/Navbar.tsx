@@ -20,7 +20,7 @@ import { Fragment } from "react";
  * - 스크롤 시 배경 투명도 변경
  */
 
-type NavbarTheme = "dark" | "light" | "primary";
+type NavbarTheme = "dark" | "light" | "primary" | "service";
 
 interface NavbarProps {
   theme?: NavbarTheme;
@@ -29,9 +29,15 @@ interface NavbarProps {
 export default function Navbar({ theme = "light" }: NavbarProps) {
   const { t, i18n } = useTranslation();
   const location = useLocation();
+  const AUTH_STORAGE_KEY = "brilliance.isLoggedIn";
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // TODO: 실제 로그인 상태 연동
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+    return sessionStorage.getItem(AUTH_STORAGE_KEY) === "true";
+  }); // TODO: 실제 로그인 상태 연동
   const [selectedLanguage] = useState(i18n.language.toUpperCase());
   const [showNavbar, setShowNavbar] = useState(true);
   const lastScrollYRef = useRef(0);
@@ -51,6 +57,21 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
     const lang = langCode.toLowerCase();
     localStorage.setItem("language", lang);
     window.location.reload();
+  };
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    if (isLoggedIn) {
+      sessionStorage.setItem(AUTH_STORAGE_KEY, "true");
+    } else {
+      sessionStorage.removeItem(AUTH_STORAGE_KEY);
+    }
+  }, [isLoggedIn]);
+
+  const handleAuthToggle = () => {
+    setIsLoggedIn((prev) => !prev);
   };
   // 스크롤 방향 감지 및 배경 변경
   useEffect(() => {
@@ -187,6 +208,7 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
   const themeStyles = {
     dark: {
       scrolled: "bg-black/20 backdrop-blur-md shadow-lg",
+      baseText: "text-white",
       text: "text-white",
       activeText: "text-primary-darken",
       hoverText: "hover:text-primary-darken",
@@ -194,6 +216,7 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
     },
     primary: {
       scrolled: "backdrop-blur-sm shadow-md",
+      baseText: "text-white",
       text: "text-white",
       activeText: "text-black hover:text-black font-semibold",
       hoverText: "hover:text-gray-500",
@@ -201,16 +224,30 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
     },
     light: {
       scrolled: "backdrop-blur-sm shadow-md",
+      baseText: "text-white",
       text: "text-white",
       activeText: "text-black font-semibold",
       hoverText: "hover:text-gray-800",
       style: undefined,
     },
+    service: {
+      scrolled: "bg-white/85 backdrop-blur-md shadow-lg",
+      baseText: "text-black",
+      text: "text-black",
+      activeText: "text-primary font-semibold",
+      hoverText: "hover:text-gray-700",
+      style: undefined,
+    },
   } as const;
 
-  const resolvedTheme = currentPath === "/partners" ? "dark" : theme;
+  const resolvedTheme =
+    currentPath === "/partners"
+      ? "dark"
+      : currentPath === "/service"
+        ? "service"
+        : theme;
   const currentTheme = themeStyles[resolvedTheme];
-  const textColor = isScrolled ? currentTheme.text : "text-white";
+  const textColor = isScrolled ? currentTheme.text : currentTheme.baseText;
 
   // Navbar hover 핸들러
   const handleNavbarMouseEnter = () => {
@@ -320,7 +357,7 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
 
             {/* 로그인/로그아웃 아이콘 */}
             <button
-              onClick={() => setIsLoggedIn(!isLoggedIn)}
+              onClick={handleAuthToggle}
               className={`hover:text-primary-darken flex items-center gap-2 text-sm font-medium transition-colors ${textColor}`}
               title={isLoggedIn ? t("nav.logout") : t("nav.login")}
             >
@@ -412,7 +449,7 @@ export default function Navbar({ theme = "light" }: NavbarProps) {
                 Account
               </p>
               <button
-                onClick={() => setIsLoggedIn(!isLoggedIn)}
+                onClick={handleAuthToggle}
                 className="text-secondary-2 hover:text-primary-darken mt-3 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[15px] font-medium transition-colors hover:bg-gray-50"
               >
                 {isLoggedIn ? (
