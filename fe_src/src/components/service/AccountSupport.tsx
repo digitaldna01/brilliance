@@ -8,8 +8,8 @@ export default function AccountSupport() {
       </div>
 
       <div className="grid gap-6 rounded-2xl bg-white/80 p-6 lg:grid-cols-2">
-        <article className="rounded-xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
-          <div className="mb-4 flex h-35 items-center justify-start rounded-xl px-4">
+        <article className="rounded-md border border-gray-200 bg-gray-50 p-6 shadow-sm">
+          <div className="mb-4 flex h-35 items-center justify-start rounded-md px-4">
             <img
               src="/images/service/accountSupport-1.svg"
               className="h-35 w-35"
@@ -37,7 +37,7 @@ export default function AccountSupport() {
           </div>
         </article>
 
-        <article className="rounded-xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
+        <article className="rounded-md border border-gray-200 bg-gray-50 p-6 shadow-sm">
           <div className="mb-4 flex h-35 items-center justify-start rounded-xl px-4">
             <img
               src="/images/service/accountSupport-2.svg"
